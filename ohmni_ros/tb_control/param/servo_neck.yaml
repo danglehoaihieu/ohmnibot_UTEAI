@@ -1,0 +1,37 @@
+#herkulex servo
+servo_neck_raw2degree: 0.32579
+servo_neck_id: 3
+servo_neck_use_eeprom: false
+servo_neck_min_pos: 280
+servo_neck_max_pos: 650
+servo_neck_kp: 192
+servo_neck_ki: 0
+servo_neck_kd: 24
+servo_neck_v_min: 6.0
+servo_neck_v_max: 18.2
+servo_neck_overload_pwm: 500
+servo_neck_max_pwm: 150
+servo_neck_pos_raw_zero_offset: 512
+
+servo_neck_use_default_on_behavior: false
+servo_neck_default_on_mode: 1 #  kBreak = 0, kOn = 1, Free = 2
+servo_neck_default_on_pos_rad: 0.72
+servo_neck_default_on_pos_playtime: 100
+
+servo_neck_use_default_off_behavior: true
+servo_neck_default_off_mode: 2
+servo_neck_default_off_pos_rad: 0.0
+servo_neck_default_off_pos_playtime: 100
+#where you place the servo and connected links
+# fixed joint, need to calib to get correct mouting position (x,y,yaw)
+servo_neck_parent_frame_id: /base_link
+servo_neck_joint_frame_id: /servo_neck_joint
+servo_neck_output_frame_id: /servo_neck_output
+
+#define static joint
+parentLink_servoNeckJoint/tx: -0.09788
+parentLink_servoNeckJoint/ty: 0.0
+parentLink_servoNeckJoint/tz: 1.24594
+parentLink_servoNeckJoint/rx: 0.0
+parentLink_servoNeckJoint/ry: 0.0
+parentLink_servoNeckJoint/rz: 0.0

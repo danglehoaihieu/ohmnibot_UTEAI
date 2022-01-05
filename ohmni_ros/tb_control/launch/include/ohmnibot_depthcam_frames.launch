@@ -1,0 +1,15 @@
+<launch>
+  <arg name="depthcam_name" default="depthcam" />
+  <arg name="tf_prefix" default="" />
+
+  <!-- approximate parameters -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg depthcam_name)_mounting_joint"
+    args="-0.1437
+          0.0
+          1.0322
+          0.0
+          -0.192
+          0.0
+     $(arg tf_prefix)/base_link $(arg tf_prefix)/$(arg depthcam_name)_joint" />
+
+</launch>

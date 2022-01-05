@@ -1,0 +1,23 @@
+<launch>
+  <node name="tb_control" pkg="tb_control" type="tb_control" output="screen">
+     <rosparam file="$(find tb_control)/param/ohmnilabs_bot.yaml"/>
+     <rosparam file="$(find tb_control)/param/servo_neck.yaml"/>
+     <rosparam file="$(find tb_control)/param/servo_ext1.yaml"/>
+     <rosparam file="$(find tb_control)/param/servo_ext2.yaml"/>
+  </node>
+
+  <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+  <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
+  <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
+  <!--param name="serial_baudrate"     type="int"    value="256000"--><!--A3 -->
+  <param name="frame_id"            type="string" value="laser"/>
+  <param name="inverted"            type="bool"   value="false"/>
+  <param name="angle_compensate"    type="bool"   value="true"/>
+  </node>
+
+  <node pkg="tf" type="static_transform_publisher"
+name="base2laser_bcast" args= "0.1 0.0 0.2 0.0 0.0 0.0
+base_link laser 30" />
+
+</launch>
+

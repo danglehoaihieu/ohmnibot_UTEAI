@@ -1,0 +1,8 @@
+#Define frame coordinate for output topic
+frame_id_odom: /odom
+frame_id_baselink: /base_link
+enable_broadcast_transform: true
+use_origin_firmware: true
+
+wheel_radius: 0.0745 #meter
+wheel_separation: 0.33 #meter

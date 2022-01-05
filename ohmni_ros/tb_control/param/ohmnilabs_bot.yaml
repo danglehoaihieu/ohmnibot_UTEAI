@@ -1,0 +1,24 @@
+#default connection
+port_name: /dev/usb/tty1-2.1
+baudrate: 115200
+#Define frame coordinate for output topic
+frame_id_odom: /odom
+frame_id_baselink: /base_link
+frame_id_footprint: /footprint
+enable_broadcast_transform: true
+
+wheel_radius: 0.07525 #(for Ohmni) #0.0745 (for ANA) #meter
+wheel_separation: 0.333 #(for Ohmni) #0.333 (for ANA) #meter
+
+#acceleration control
+max_linear_velocity: 0.7 #maximum speed when no load and angular velo = 0 is about 1m/s
+max_angular_velocity: 2.0  #maximum speed when no load and angular velo = 0 is about 1m/s
+#amount to add each controller period: value from 1(slow acceleration)-10(fast)
+delta_velo_raw: 4
+
+#sensor noise cancelation threshold, raw acceleration should not except this threshold
+encoder_raw_accel_noise_threshold: 500
+
+#motion watch_dog timer, reset to robot speed to zero after a period
+motion_watchdog_enable: true
+motion_watchdog_period: 0.5

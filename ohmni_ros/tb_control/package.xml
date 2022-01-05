@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>tb_control</name>
+  <version>0.1.0</version>
+  <description>The tb_control package</description>
+  <maintainer email="NhatTan@todo.todo">NhatTan</maintainer>
+  <license>Apache 2.0</license>
+  <author >NhatTan</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+   <depend>tf2_geometry_msgs</depend>
+  <depend>tb_msgs</depend>
+  <depend>serial_device</depend>
+  <depend>ohmnilabs_common</depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>
