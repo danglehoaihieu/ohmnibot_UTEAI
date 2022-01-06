@@ -17,11 +17,11 @@ You can use SLAM package available in docker environment with following steps
 ### Step 1: Launch ROS SLAM on the bot
 In docker env: roslaunch tb_slam tb_slam.launch slam_methods:=hector
 ### Step 2: Connect the bot with the local machine
-1. Export bot and local machine ip address to ROS. <br />
+1. Export bot and local machine ip address to ROS <br />
 In the local machine: export ROS_IP=[local_machine_ip] <br />
 In the local machine: export ROS_MASTER_URI=http://[bot_ip]:11311
-2. Use rqt_robot_steering tool to manual control the bot
-In the local machine: sudo apt install ros-melodic-rqt-robot-steering
+2. Use rqt_robot_steering tool to manual control the bot <br />
+In the local machine: sudo apt install ros-melodic-rqt-robot-steering <br />
 In the local machine: rosrun rqt_robot_steering rqt_robot_steering
 ### Step 3: Save the map to file
 After SLAM, the map which is built can be saved as a file with the following command:
