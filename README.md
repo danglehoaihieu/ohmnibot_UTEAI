@@ -12,8 +12,7 @@ In bot: docker run -it --network host -v /var/ohmni_ros/tb_control:/opt/ros/melo
 
 For brevity, the command above is run by using a SH file at the path /system/bin/ohmni_ros_env. You can copy ohmni_ros_env file above to that path.
 ## Making a map for the bot
-Before navigation, a map need to be made first.
-You can use SLAM package available in docker environment with following steps
+A map needs to be made before the bot works. You can use SLAM package available in docker environment with following steps
 ### Step 1: Launch ROS SLAM on the bot
 In docker env: roslaunch tb_slam tb_slam.launch slam_methods:=hector
 ### Step 2: Connect the bot with the local machine
@@ -28,7 +27,7 @@ After SLAM, the map which is built can be saved as a file with the following com
 
 rosrun map_server map_saver -f /path to file
 
-Put map file (.pgm, .yaml) to "/var/ohmni_ros/maps/" in Ohmni OS
+Put map files (.pgm, .yaml) to "/var/ohmni_ros/maps/" in Ohmni OS
 ## Running apps
 This program is divided into several processing threads to perform communication tasks with ROS, facemask detection, and web interface interaction.
 ### Step 1: Launch ROS Navigation on the bot
@@ -36,7 +35,7 @@ In docker env: roslaunch tb_navigation tb_navigation.launch
 ### Step 2: Run main program
 In docker env: Run python3 main.py at /home/ohmnidev/
 ### Step 3: (optional) Connect the bot with the local machine
-
+The local machine could to be use to ROS debug and visualize the map
 
 
 
