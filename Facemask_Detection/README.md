@@ -1,4 +1,4 @@
-Facemask Detection 
+# Facemask Detection 
 
 Description:
 Robot can detect the person who is wearing mask or not, and send image capture to standalone GUI.
@@ -6,7 +6,7 @@ Robot can detect the person who is wearing mask or not, and send image capture t
 Requirement:
  Plugin TPU into BOT
  
-Step:
+Steps:
  1. Install sudo apt-get install python3-pycoral
  2. Run facemask.py
 
