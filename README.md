@@ -33,7 +33,13 @@ This program is divided into several processing threads to perform communication
 ### Step 1: Launch ROS Navigation on the bot
 In docker env: roslaunch tb_navigation tb_navigation.launch
 ### Step 2: Run main program
-In docker env: Run python3 main.py at /home/ohmnidev/
+1. Open another terminal of the current container <br/>
+docker exec -it <container> bash
+2. Setup enviroment <br/>
+In docker env: source /opt/ros/melodic/setup.bash <br/>
+In docker env: source /home/hieu/catkin_ws/devel/setup.bash <br/>
+3. Run main program at path /home/ohmnidev/ <br/>
+In docker env: python3 main.py
 ### Step 3: (optional) Connect the bot with the local machine
 The local machine could to be use to ROS debug and visualize the map
 
