@@ -34,7 +34,7 @@ This program is divided into several processing threads to perform communication
 In docker env: roslaunch tb_navigation tb_navigation.launch
 ### Step 2: Run main program
 1. Open another terminal of the current container <br/>
-docker exec -it <!--container_id--> bash
+docker exec -it *container_id* bash
 2. Setup enviroment <br/>
 In docker env: source /opt/ros/melodic/setup.bash <br/>
 In docker env: source /home/hieu/catkin_ws/devel/setup.bash <br/>
