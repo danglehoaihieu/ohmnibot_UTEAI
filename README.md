@@ -4,11 +4,11 @@ This is a project implemented on Robot OhmniBot, which is a product of ohmnilab 
 All source code were packaged as the docker image that you can pull and run on top of Ohmni OS.
 Here are the steps to up and running.
 ### Step 1: Pull the docker to the bot
-In bot: docker pull danglehoaihieu/ohmni_ros_bot:2.11
+In bot: docker pull danglehoaihieu/ohmni_ros_bot:2.9
 ### Step 2: Run docker
-Copy ohmni_ros folder to path /var/ in Ohmni OS.
+Copy ohmni_ros/ and hieu/ folders to path /var/ in Ohmni OS.
 
-In bot: docker run -it --network host -v /var/hieu:/home/hieu  -v /var/ohmni_ros/tb_control:/opt/ros/melodic/share/tb_control  -v /var/ohmni_ros:/home/ohmnidev -v /data/data/com.ohmnilabs.telebot_rtc/files:/app -v /data:/data --privileged -v /dev:/dev -e ROS_IP=192.168.1.5 ohmni_ros:2.11
+In bot: docker run -it --network host -v /var/hieu:/home/hieu  -v /var/ohmni_ros/tb_control:/opt/ros/melodic/share/tb_control  -v /var/ohmni_ros:/home/ohmnidev -v /data/data/com.ohmnilabs.telebot_rtc/files:/app -v /data:/data --privileged -v /dev:/dev -e ROS_IP=192.168.1.5 ohmni_ros:2.9
 
 For brevity, the command above is run by using a SH file at the path /system/bin/ohmni_ros_env. You can copy ohmni_ros_env file above to that path.
 ## Making a map for the bot
