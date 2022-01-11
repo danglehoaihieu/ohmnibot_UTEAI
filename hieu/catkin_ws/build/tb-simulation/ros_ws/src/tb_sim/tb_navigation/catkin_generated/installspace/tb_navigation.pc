@@ -1,0 +1,8 @@
+prefix=/home/hieu/catkin_ws/install
+
+Name: tb_navigation
+Description: Description of tb_navigation
+Version: 1.2.5
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

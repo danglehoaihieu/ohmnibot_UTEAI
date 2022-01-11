@@ -1,0 +1,8 @@
+prefix=/home/hieu/catkin_ws/devel
+
+Name: tb_slam
+Description: Description of tb_slam
+Version: 1.2.5
+Cflags: -I/home/hieu/catkin_ws/src/tb-simulation/ros_ws/src/tb_sim/tb_slam/include
+Libs: -L${prefix}/lib 
+Requires: roscpp sensor_msgs
