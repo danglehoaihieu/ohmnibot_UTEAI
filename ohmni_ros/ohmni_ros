@@ -1,0 +1,8 @@
+#/system/bin/sh
+
+
+
+docker run -it --network host -v /var/ohmni_ros/tb_control:/opt/ros/melodic/share/tb_control  -v /var/ohmni_ros:/home/ohmnidev -v /data/data/com.ohmnilabs.telebot_rtc/files:/app -v /data:/data --privileged -v /dev:/dev -e ROS_IP=192.168.1.5 ohmni_ros:2.11
+
+
+

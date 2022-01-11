@@ -1,0 +1,12 @@
+<launch>
+    <!--include file="$(find tb_control)/launch/tb_control.launch"/-->
+
+    <node name="depthcam_state_publisher" pkg="tb_control" type="depthcam_state_publisher" output="screen">
+       <remap from="~servo_pos" to="/tb_control/servo/ext1" />
+       <rosparam file="$(find tb_control)/param/depthcam.yaml"/>
+    </node>
+
+    <include file="$(find tb_control)/launch/include/ohmnibot_depthcam_frames.launch">
+      <arg name="depthcam_name" value="astra" />
+    </include>
+</launch>

@@ -48,6 +48,7 @@ class facemask():
 		# define a video capture object
 		vid = cv2.VideoCapture(0) # 0: cam front , 1: cam neck
 		count_frame = 0
+		time_say = 0
 		print("Connected to camera Done!")
 		while(True):
 			
@@ -76,26 +77,38 @@ class facemask():
 						# print('No objects detected')
 						# self.set_warning(False)
 					else:
+						count_frame+=1
 						print( "detected")
-						#self.botshell.sendall(("say a \n").encode(self.FORMAT))
-						#fulldata =  self.handle_recv()
+						# self.botshell.sendall(("say please wearing mask \n").encode(self.FORMAT))
+						# fulldata =  self.handle_recv()
 						# print('Number of objects: ', objs.count)
 						# self.set_warning(True)
 						# print("warning: ",self.warning)
-						# for obj in objs:
+						say = False
+						for obj in objs:
+							print(str(labels.get(obj.id, obj.id)))
+							if (str(labels.get(obj.id, obj.id))) == 'unmask' :
+								say = True
+								
 						# 	print(('label {}:{}, score {}, ').format(obj.id, labels.get(obj.id, obj.id), obj.score))
 							# print('  id:    ', obj.id)
 							# print('  score: ', obj.score)
 							# print('  bbox:  ', obj.bbox)
 
-						image = image.convert('RGB')
-						print( "detected1")
-						self.draw_objects(ImageDraw.Draw(image), objs, labels, fps)
-						print( "detected2")
-						self.send_image(image)
-						print( "detected3")
+						print(time.time() - time_say)
+						if say and time.time() - time_say > 2:
 
-					#image.save(self.output + str(count_frame) + ".jpg")
+							time_say = time.time()
+							self.botshell.sendall(("say please wearing mask \n").encode(self.FORMAT))
+							fulldata =  self.handle_recv()
+						# image = image.convert('RGB')
+						# print( "detected1")
+						self.draw_objects(ImageDraw.Draw(image), objs, labels, fps)
+						# print( "detected2")
+						self.send_image(image)
+						# print( "detected3")
+
+					# image.save(self.output + str(count_frame) + ".jpg")
 					
 					count_frame += 1
 				except Exception as e:
@@ -144,17 +157,23 @@ class facemask():
 			self.lock.release()
 	
 	def send_image(self, img):
-		self.botshell.sendall(("say a \n").encode(self.FORMAT))
-		fulldata =  self.handle_recv()
-		print( "send_image")
+		# self.botshell.sendall(("say a \n").encode(self.FORMAT))
+		# fulldata =  self.handle_recv()
+
 		retval, buffer_img= cv2.imencode('.jpg', numpy.array(img))
-		print( "send_image 2")
+		# print( "send_image 2")
 		encode = base64.b64encode(buffer_img)
 		print( "send_image 3")
-		data = {"name": encode}
-		# data = {"name": base64.encodebytes(img).decode('utf-8')}
+		# data =  {'name': 'alex', 'age': 10}#{"name": encode}
 		# print(data)
-		self.botshell.sendall(("send_to_stand_alone_api {}".format(data)).encode(self.FORMAT))
+		data =  base64.encodebytes(encode).decode('utf-8')
+		# self.botshell.sendall(("send_to_stand_alone_api {a :" + "{}".format(0) + "\n}").encode(self.FORMAT))
+		self.botshell.sendall(("send_to_stand_alone_api {2: 1} \n").encode(self.FORMAT))
+		fulldata =  self.handle_recv()
+
+		# data = {"name": base64.encodebytes(encode).decode('utf-8')}
+		# self.botshell.sendall(("send_to_stand_alone_api {}\n".format(data)).encode(self.FORMAT))
+		# fulldata =  self.handle_recv()
 		print( "send_image 5")
 		
 		# retval, buffer_img = cv2.imencode('.jpg', frame)

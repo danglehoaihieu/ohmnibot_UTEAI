@@ -3,7 +3,7 @@ from logging import fatal
 from pickle import TRUE
 import platform
 import subprocess
-
+import math
 import socket
 import os, os.path
 import sys
@@ -11,9 +11,10 @@ from enum import Enum
 from struct import *
 from threading import Thread
 import time
-from ROS import ROSThread
+#from ROS import ROSThread
 import rospy
 from std_msgs.msg import Bool, String
+from nav_msgs.msg import Odometry
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 import actionlib
 # from facemask import facemask
@@ -28,9 +29,21 @@ class mainThread(Thread):
 		self.FORMAT = "utf8"
 		# self.homePoint = rospy.Subscriber("/home", String,self.callback_homePoint, queue_size = 1)
 		# self.gohome = rospy.Publisher("/bot", String, queue_size=1)
+		self.odom_sub = rospy.Subscriber('/tb_control/wheel_odom', Odometry, self.callback_pose)
 		self.atHome = False
 		self.start_time = time.time()
 		self.ROS_running = False
+		self.position = [0.0,0.0,0.0]
+		self.orientation = [0.0,0.0,0.0]
+		self.count = 0
+		self.past_x = 0
+		self.past_y = 0
+		self.past_z = 0
+
+	def callback_pose(self, msg):
+		self.position = msg.pose.pose.position
+		self.orientation = msg.pose.pose.orientation 
+
 
 	def callback_homePoint(self, data):
 		print('self.autodock: ', data.data)
@@ -48,7 +61,7 @@ class mainThread(Thread):
 		fulldata = self.handle_recv()
 		# self.set_workspace()
 		while True:
-			try:
+			# try:
 				# if self.timeToCheckBattery() and not self.ROS_running : 
 				# 	self.check_batery()
 				print("please input cmd: ")
@@ -69,6 +82,7 @@ class mainThread(Thread):
 				elif x == "home": #self.check_batery()
 					# self.set_gohome()
 					self.gohome()
+					self.autodock_api()
 				elif x == "ws": #self.check_batery()
 					# self.set_workspace()
 					self.goWorkspace()
@@ -83,9 +97,9 @@ class mainThread(Thread):
 					print("recv: ", fulldata)
 					
 					
-			except:
-				print ("RETRY socket")
-				self.create_socket()
+			# except:
+			# 	print ("RETRY socket")
+			# 	self.create_socket()
 
 	def create_socket(self):
 		self.botshell = None
@@ -198,7 +212,33 @@ class mainThread(Thread):
 			return True
 		else:
 			return False
-    
+	def error(self,a,b):
+		return math.sqrt((a-b)*(a-b))
+	def wait_goal(self):
+		x = self.position.x
+		y = self.position.y
+		orientation = self.orientation.z
+		error_x = self.error(x,self.past_x)
+		error_y = self.error(y,self.past_y)
+		error_z = self.error(orientation,self.past_z)
+		
+		errora = error_x+error_y+error_z
+		print("error", error)
+		if errora < 0.05:
+			self.count += 1
+		else:
+			self.count = 0
+
+		self.past_x = x
+		self.past_z = y
+		self.past_z = orientation
+
+		if self.count > 10: # 10 is counter trigger
+			self.count = 0
+			return True
+
+		return False
+
 	def movebase_client(self, x, y, w):
 		w = w*0.0174532925 # convert to radian
 		client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
@@ -213,24 +253,28 @@ class mainThread(Thread):
 		goal.target_pose.pose.orientation.z = w
 
 		client.send_goal(goal)
-		wait = client.wait_for_result()
-		if not wait:
-			rospy.logerr("Action server not available!")
-			rospy.signal_shutdown("Action server not available!")
-		else:
-			return client.get_result()
+		print('waiting')
+		while not self.wait_goal(): None
+		return True
+		# wait = client.wait_for_result()
+		# if not wait:
+		# 	rospy.logerr("Action server not available!")
+		# 	rospy.signal_shutdown("Action server not available!")
+		# else:
+		# 	print("Done")
+		# 	return client.get_result()
 	
 	def gohome(self):
 		result = False
 		result = self.movebase_client(-0.5, 0, 0)
 		if result:
-			rospy.loginfo("Goal execution done!")
+			print("Goal execution done!")
 
 	def goWorkspace(self):
 		result = False
 		result = self.movebase_client(-1, 0, 180)
 		if result:
-			rospy.loginfo("Goal execution done!")
+			print("Goal execution done!")
 
 try:
 	# sub = rospy.Subscriber("/home", Bool, callback_homePoint2, queue_size = 1)
@@ -244,8 +288,4 @@ try:
 except:
 	print("Error") 
  
-
-
-
-
 

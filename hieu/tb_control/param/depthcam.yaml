@@ -1,0 +1,17 @@
+frameid_depthcam_joint: /astra_joint
+frameid_depthcam_link: /astra_link
+
+#defined if then transform from depthcam_joint to depthcam_link is fixed
+is_fixed_mount: false
+
+#if fixed mount, then below is a static transform
+# if not, this depth camera is motorized by a servo in y axis, a transform is broadcasted every servo feedback.
+depthcamJoint_depthcamLink/tx: 0.04
+depthcamJoint_depthcamLink/ty: 0.0
+depthcamJoint_depthcamLink/tz: 0.0
+depthcamJoint_depthcamLink/rx: 0.0
+depthcamJoint_depthcamLink/ry: 0.0 #
+depthcamJoint_depthcamLink/rz: 0.0
+
+servo_zero_offset_rad: 0.174533
+
