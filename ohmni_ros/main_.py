@@ -30,8 +30,17 @@ class mainThread(Thread):
 		# self.homePoint = rospy.Subscriber("/home", String,self.callback_homePoint, queue_size = 1)
 		# self.gohome = rospy.Publisher("/bot", String, queue_size=1)
 		self.odom_sub = rospy.Subscriber('/tb_control/wheel_odom', Odometry, self.callback_pose)
+		self.client_movebase = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+		print("waiting for movebase server")
+		wait_server = self.client_movebase.wait_for_server(rospy.Duration(5))
+		if wait_server:
+			print("connected movebase server")
+		else:
+			print("timeout")
 		self.atHome = False
 		self.start_time = time.time()
+		self.time_wait = time.time()
+		self.time_try_movebase = time.time()
 		self.ROS_running = False
 		self.position = [0.0,0.0,0.0]
 		self.orientation = [0.0,0.0,0.0]
@@ -215,35 +224,35 @@ class mainThread(Thread):
 	def error(self,a,b):
 		return math.sqrt((a-b)*(a-b))
 	def wait_goal(self):
-		x = self.position.x
-		y = self.position.y
-		orientation = self.orientation.z
-		error_x = self.error(x,self.past_x)
-		error_y = self.error(y,self.past_y)
-		error_z = self.error(orientation,self.past_z)
-		
-		errora = error_x+error_y+error_z
-		print("error", error)
-		if errora < 0.05:
-			self.count += 1
-		else:
-			self.count = 0
+		diff = time.time() - self.time_wait
+		if diff > 0.2:
+			x = self.position.x
+			y = self.position.y
+			orientation = self.orientation.z
+			error_x = self.error(x,self.past_x)
+			error_y = self.error(y,self.past_y)
+			error_z = self.error(orientation,self.past_z)
+			
+			errora = error_x+error_y+error_z
+			print("error", diff, error_x, error_y, error_z, errora)
+			if errora < 0.05: # 0.05 is the unmoved error threshold
+				self.count += 1
+			else:
+				self.count = 0
 
-		self.past_x = x
-		self.past_z = y
-		self.past_z = orientation
-
-		if self.count > 10: # 10 is counter trigger
-			self.count = 0
-			return True
+			self.past_x = x
+			self.past_y = y
+			self.past_z = orientation
+			self.time_wait = time.time()
+			if self.count > 10: # 10 is trigger counter 
+				self.count = 0
+				return True
 
 		return False
 
 	def movebase_client(self, x, y, w):
 		w = w*0.0174532925 # convert to radian
-		client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
-		client.wait_for_server()
-
+		client = self.client_movebase
 		goal = MoveBaseGoal()
 		goal.target_pose.header.frame_id = "map"
 		goal.target_pose.header.stamp = rospy.Time.now()
@@ -253,28 +262,40 @@ class mainThread(Thread):
 		goal.target_pose.pose.orientation.z = w
 
 		client.send_goal(goal)
-		print('waiting')
+		print('waiting goal')
 		while not self.wait_goal(): None
-		return True
-		# wait = client.wait_for_result()
-		# if not wait:
-		# 	rospy.logerr("Action server not available!")
-		# 	rospy.signal_shutdown("Action server not available!")
-		# else:
-		# 	print("Done")
-		# 	return client.get_result()
+		
+		wait = client.wait_for_result(rospy.Duration(2))
+		if not wait:
+			client.cancel_goal()
+			rospy.logerr("Action server not available!")
+			# rospy.signal_shutdown("Action server not available!")
+		else:
+			print("Done")
+			return client.get_result()
 	
 	def gohome(self):
 		result = False
-		result = self.movebase_client(-0.5, 0, 0)
+		result = self.movebase_client(0, 0, 0)
 		if result:
-			print("Goal execution done!")
+			self.atHome = True
+			print("goHome done!")
 
 	def goWorkspace(self):
+		if self.atHome:
+			self.leaveDock()
 		result = False
-		result = self.movebase_client(-1, 0, 180)
+		result = self.movebase_client(-0.1, 0.1, 0)
 		if result:
-			print("Goal execution done!")
+			self.atHome = False
+			print("goWorkspace done!")
+	
+	def leaveDock(self):
+		result = False
+		result = self.movebase_client(-0.1,0,0)
+		if result:
+			self.atHome = False
+			print("leaveDock done!")
 
 try:
 	# sub = rospy.Subscriber("/home", Bool, callback_homePoint2, queue_size = 1)
