@@ -37,7 +37,7 @@ class mainThread(Thread):
 			print("connected movebase server")
 		else:
 			print("timeout")
-		self.atHome = False
+		self.atHome = True
 		self.start_time = time.time()
 		self.time_wait = time.time()
 		self.time_try_movebase = time.time()
@@ -235,7 +235,7 @@ class mainThread(Thread):
 			
 			errora = error_x+error_y+error_z
 			print("error", diff, error_x, error_y, error_z, errora)
-			if errora < 0.05: # 0.05 is the unmoved error threshold
+			if errora < 0.01: # 0.01 is the unmoved error threshold
 				self.count += 1
 			else:
 				self.count = 0
@@ -276,7 +276,7 @@ class mainThread(Thread):
 	
 	def gohome(self):
 		result = False
-		result = self.movebase_client(0, 0, 0)
+		result = self.movebase_client(-0.5, 0, 0)
 		if result:
 			self.atHome = True
 			print("goHome done!")
@@ -285,14 +285,14 @@ class mainThread(Thread):
 		if self.atHome:
 			self.leaveDock()
 		result = False
-		result = self.movebase_client(-0.1, 0.1, 0)
+		result = self.movebase_client(-0.8, 0, 0)
 		if result:
 			self.atHome = False
 			print("goWorkspace done!")
 	
 	def leaveDock(self):
 		result = False
-		result = self.movebase_client(-0.1,0,0)
+		result = self.movebase_client(-0.1,0,180)
 		if result:
 			self.atHome = False
 			print("leaveDock done!")
