@@ -38,7 +38,7 @@ docker exec -it *container_id* bash
 2. Setup enviroment <br/>
 In docker env: source /home/hieu/catkin_ws/devel/setup.bash <br/>
 3. Run main program at path /home/ohmnidev/ <br/>
-In docker env: python3 main.py
+In docker env: python3 main_.py
 ### Step 3: (optional) Connect the bot with the local machine
 The local machine could to be use to ROS debug and visualize the map
 
